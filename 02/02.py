@@ -3,22 +3,18 @@ def run(program, pointer=0, noun=0, verb=0):
         program[1] = noun
         program[2] = verb
 
-    opcode = program[pointer]
+    opcode, i1, i2, target = program[pointer: pointer + 4]
 
     if opcode == 99:
         return program
 
-    n1 = program[program[pointer + 1]]
-    n2 = program[program[pointer + 2]]
-
-    target = program[pointer + 3]
+    n1 = program[i1]
+    n2 = program[i2]
 
     if opcode == 1:
         program[target] = n1 + n2
     elif opcode == 2:
         program[target] = n1 * n2
-    else:
-        return None
 
     return run(program, pointer + 4)
 
