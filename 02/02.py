@@ -27,8 +27,8 @@ print(run(data.copy(), noun=12, verb=2)[0])
 
 search = 19690720
 
-for n in range(99):
-    for v in range(99):
+for n in range(100):
+    for v in range(100):
         result = run(data.copy(), noun=n, verb=v)
         if result and result[0] == search:
             # result part 2
