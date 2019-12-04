@@ -1,74 +1,41 @@
 data = [i for i in open("input.txt").readlines()]
-instructions_1 = [p.strip() for p in data[0].split(",")]
-instructions_2 = [p.strip() for p in data[1].split(",")]
+instructions_1 = [p for p in data[0].split(",")]
+instructions_2 = [p for p in data[1].split(",")]
 
 
-class Point:
-    def __init__(self, x, y, steps):
-        self.x = x
-        self.y = y
-        self.steps = steps
-
-    def __repr__(self):
-        return f"({self.x}, {self.y} - {self.steps})"
-
-    def __eq__(self, other):
-        return self.x == other.x and self.y == other.y
-
-    def __hash__(self):
-        return hash((self.x, self.y))
-
-
-def traversed_coordinates(instructions):
-    coordinates = set()
-    cx, cy = 0, 0
-
-    total_steps = 0
+def get_traversed_coordinates(instructions):
+    coordinates = dict()
+    x, y, steps_taken = 0, 0, 0
 
     for instruction in instructions:
         direction = instruction[:1]
         steps = int(instruction[1:])
 
-        if direction == 'R':
-            for c in range(steps):
-                cy = cy + 1
-                total_steps += 1
-                coordinates.add(Point(cx, cy, total_steps))
-        elif direction == 'L':
-            for c in range(steps):
-                cy = cy - 1
-                total_steps += 1
-                coordinates.add(Point(cx, cy, total_steps))
-        elif direction == 'U':
-            for c in range(steps):
-                cx = cx + 1
-                total_steps += 1
-                coordinates.add(Point(cx, cy, total_steps))
-        elif direction == 'D':
-            for c in range(steps):
-                cx = cx - 1
-                total_steps += 1
-                coordinates.add(Point(cx, cy, total_steps))
+        for s in range(steps):
+            if direction == "R":
+                y += 1
+            elif direction == "L":
+                y -= 1
+            elif direction == "U":
+                x += 1
+            elif direction == "D":
+                x -= 1
+
+            steps_taken += 1
+            coordinates[(x, y)] = steps_taken
 
     return coordinates
 
 
-coordinates_1 = traversed_coordinates(instructions_1)
-coordinates_2 = traversed_coordinates(instructions_2)
+coordinates_1 = get_traversed_coordinates(instructions_1)
+coordinates_2 = get_traversed_coordinates(instructions_2)
 
-intersections = coordinates_1 & coordinates_2
+intersections = coordinates_1.keys() & coordinates_2.keys()
 
-distance = min([abs(point.x) + abs(point.y) for point in intersections])
+distance = min([abs(point[0]) + abs(point[1]) for point in intersections])
 
 # solution part 1
 print(distance)
 
-used_steps = []
-
-for intersection in intersections:
-    for cor in coordinates_2:
-        if intersection == cor:
-            used_steps.append(intersection.steps + cor.steps)
-
 # solution part 2
-print(min(used_steps))
+print(min(coordinates_1[point] + coordinates_2[point] for point in intersections))
