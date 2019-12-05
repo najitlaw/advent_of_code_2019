@@ -1,6 +1,4 @@
-data = [i for i in open("input.txt").readlines()]
-instructions_1 = [p for p in data[0].split(",")]
-instructions_2 = [p for p in data[1].split(",")]
+[path1, path2] = [line.split(",") for line in open("input.txt").readlines()]
 
 
 def get_traversed_coordinates(instructions):
@@ -8,7 +6,7 @@ def get_traversed_coordinates(instructions):
     x, y, steps_taken = 0, 0, 0
 
     for instruction in instructions:
-        direction = instruction[:1]
+        direction = instruction[0]
         steps = int(instruction[1:])
 
         for s in range(steps):
@@ -27,10 +25,10 @@ def get_traversed_coordinates(instructions):
     return coordinates
 
 
-coordinates_1 = get_traversed_coordinates(instructions_1)
-coordinates_2 = get_traversed_coordinates(instructions_2)
+coordinates1 = get_traversed_coordinates(path1)
+coordinates2 = get_traversed_coordinates(path2)
 
-intersections = coordinates_1.keys() & coordinates_2.keys()
+intersections = coordinates1.keys() & coordinates2.keys()
 
 distance = min([abs(point[0]) + abs(point[1]) for point in intersections])
 
@@ -38,4 +36,4 @@ distance = min([abs(point[0]) + abs(point[1]) for point in intersections])
 print(distance)
 
 # solution part 2
-print(min(coordinates_1[point] + coordinates_2[point] for point in intersections))
+print(min(coordinates1[point] + coordinates2[point] for point in intersections))
